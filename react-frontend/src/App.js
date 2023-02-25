@@ -26,6 +26,7 @@ const App = () => {
   }, []);
 
   return (
+<<<<<<< HEAD
     <AuthContext.Provider
       value={{ isLoggedIn: isLoggedIn, login: login, logout: logout }}
     >
@@ -53,6 +54,36 @@ const App = () => {
         </main>
       </Router>
     </AuthContext.Provider>
+=======
+    <Router>
+      <MainNavigation />
+      <main>
+        <Switch>
+          <Route path="/" exact>
+            <Users />
+          </Route>
+
+          <Route path="/:userId/places" exact>
+            <UserPlaces />
+          </Route>
+
+          <Route path="/places/new" exact>
+            <NewPlace />
+          </Route>
+
+          <Route path="/places/:placeId">
+            <UpdatePlace />
+          </Route>
+
+          <Route path="/auth">
+            <Auth />
+          </Route>
+
+          <Redirect to="/" />
+        </Switch>
+      </main>
+    </Router>
+>>>>>>> 8433bff70a5a41e7867efaec6d5e2afa354d1916
   );
 };
 
