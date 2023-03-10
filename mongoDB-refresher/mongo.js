@@ -1,8 +1,8 @@
-const MongoClient = require("mongodb").MongoClient;
-
 require("dotenv").config();
 
-const url = `mongodb+srv://okcleff:${process.env.MONGO_PASSWORD}@cluster0.q2xw64j.mongodb.net/products_test?retryWrites=true&w=majority`;
+const MongoClient = require("mongodb").MongoClient;
+
+const url = `${process.env.MONGO_URL}`;
 
 const createProduct = async (req, res, next) => {
   const { name, price } = req.body;
