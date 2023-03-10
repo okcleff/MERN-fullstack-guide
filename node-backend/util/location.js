@@ -2,6 +2,8 @@ const axios = require("axios");
 
 const HttpError = require("../models/http-error");
 
+require("dotenv").config();
+
 const getCoordsForAddress = async (address) => {
   const response =
     await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(

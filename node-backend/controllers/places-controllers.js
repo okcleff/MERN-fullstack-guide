@@ -4,8 +4,6 @@ const { validationResult } = require("express-validator");
 const HttpError = require("../models/http-error");
 const getCoordsForAddress = require("../util/location");
 
-require("dotenv").config();
-
 let DUMMY_PLACES = [
   {
     id: "p1",
