@@ -1,11 +1,14 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
 
 const placesRoutes = require("./routes/places-routes");
 const usersRoutes = require("./routes/users-routes");
 const HttpError = require("./models/http-error");
 
 const app = express();
+
+require("dotenv").config();
 
 app.use(bodyParser.json());
 
@@ -26,4 +29,11 @@ app.use((error, req, res, next) => {
   res.json({ message: error.message || "An unknown error occurred." });
 });
 
-app.listen(5000);
+mongoose
+  .connect(process.env.MONGO_URL)
+  .then(() => {
+    app.listen(5000);
+  })
+  .catch((err) => {
+    console.log(err);
+  });
