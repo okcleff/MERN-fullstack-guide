@@ -1,12 +1,7 @@
-const uuid = require("uuid");
 const { validationResult } = require("express-validator");
 
 const HttpError = require("../models/http-error");
-const User = require("../models/users");
-
-const DUMMY_USERS = [
-  { id: "u1", name: "Johan", email: "test@test.com", password: "test1234" },
-];
+const User = require("../models/user");
 
 const getUsers = async (req, res, next) => {
   let users;
@@ -31,7 +26,7 @@ const signup = async (req, res, next) => {
     );
   }
 
-  const { name, email, password, places } = req.body;
+  const { name, email, password } = req.body;
 
   let existingUser;
 
@@ -57,7 +52,7 @@ const signup = async (req, res, next) => {
     email,
     image: "https://unsplash.com/ko/%EC%82%AC%EC%A7%84/6anudmpILw4",
     password,
-    places,
+    places: [],
   });
 
   try {
