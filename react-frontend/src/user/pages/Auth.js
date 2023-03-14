@@ -11,16 +11,14 @@ import {
   VALIDATOR_REQUIRE,
 } from '../../shared/util/validators';
 import { useForm } from '../../shared/hooks/form-hook';
+import { useHttpClient } from '../../shared/hooks/http-hook';
 import { AuthContext } from '../../shared/context/auth-context';
 import './Auth.css';
-
-import axios from 'axios';
 
 const Auth = () => {
   const auth = useContext(AuthContext);
   const [isLoginMode, setIsLoginMode] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState();
+  const { isLoading, error, sendRequest, clearError } = useHttpClient();
 
   const [formState, inputHandler, setFormData] = useForm(
     {
@@ -64,35 +62,43 @@ const Auth = () => {
     event.preventDefault();
 
     if (isLoginMode) {
+      try {
+        const responseData = await sendRequest(
+          'http://localhost:5000/api/users/login',
+          'POST',
+          JSON.stringify({
+            email: formState.inputs.email.value,
+            password: formState.inputs.password.value,
+          }),
+          {
+            'Content-Type': 'application/json',
+          }
+        );
+        auth.login(responseData.user.id);
+      } catch (err) {}
     } else {
-      setIsLoading(true);
-      await axios
-        .post('http://localhost:5000/api/users/signup', {
-          name: formState.inputs.name.value,
-          email: formState.inputs.email.value,
-          password: formState.inputs.password.value,
-        })
-        .then((res) => {
-          setIsLoading(false);
-          auth.login();
-        })
-        .catch((err) => {
-          setIsLoading(false);
-          setError(
-            err.response.data.message ||
-              'Something went wrong, please try again.'
-          );
-        });
-    }
-  };
+      try {
+        const responseData = await sendRequest(
+          'http://localhost:5000/api/users/signup',
+          'POST',
+          JSON.stringify({
+            name: formState.inputs.name.value,
+            email: formState.inputs.email.value,
+            password: formState.inputs.password.value,
+          }),
+          {
+            'Content-Type': 'application/json',
+          }
+        );
 
-  const errorHandler = () => {
-    setError(null);
+        auth.login(responseData.user.id);
+      } catch (err) {}
+    }
   };
 
   return (
     <React.Fragment>
-      <ErrorModal error={error} onClear={errorHandler} />
+      <ErrorModal error={error} onClear={clearError} />
       <Card className="authentication">
         {isLoading && <LoadingSpinner asOverlay />}
 
