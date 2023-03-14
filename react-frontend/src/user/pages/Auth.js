@@ -12,6 +12,8 @@ import { useForm } from '../../shared/hooks/form-hook';
 import { AuthContext } from '../../shared/context/auth-context';
 import './Auth.css';
 
+import axios from 'axios';
+
 const Auth = () => {
   const auth = useContext(AuthContext);
   const [isLoginMode, setIsLoginMode] = useState(true);
@@ -54,9 +56,21 @@ const Auth = () => {
     setIsLoginMode((prevMode) => !prevMode);
   };
 
-  const authSubmitHandler = (event) => {
+  const authSubmitHandler = async (event) => {
     event.preventDefault();
-    console.log(formState.inputs);
+
+    if (isLoginMode) {
+    } else {
+      await axios
+        .post('http://localhost:5000/api/users/signup', {
+          name: formState.inputs.name.value,
+          email: formState.inputs.email.value,
+          password: formState.inputs.password.value,
+        })
+        .then((res) => console.log(res))
+        .catch((err) => console.log(err));
+    }
+
     auth.login();
   };
 
@@ -76,6 +90,7 @@ const Auth = () => {
             onInput={inputHandler}
           />
         )}
+
         <Input
           element="input"
           id="email"
@@ -85,6 +100,7 @@ const Auth = () => {
           errorText="Please enter a valid email address."
           onInput={inputHandler}
         />
+
         <Input
           element="input"
           id="password"
@@ -94,10 +110,12 @@ const Auth = () => {
           errorText="Please enter a valid password, at least 5 characters."
           onInput={inputHandler}
         />
+
         <Button type="submit" disabled={!formState.isValid}>
           {isLoginMode ? 'LOGIN' : 'SIGNUP'}
         </Button>
       </form>
+
       <Button inverse onClick={switchModeHandler}>
         SWITCH TO {isLoginMode ? 'SIGNUP' : 'LOGIN'}
       </Button>
